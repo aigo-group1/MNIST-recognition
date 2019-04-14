@@ -34,4 +34,4 @@ def Prediction(path):
     )
     y_pred = np.argmax(results, axis=-1)
     return y_pred
-print(Prediction("7.jpg"))
+#print(Prediction("7.jpg"))
