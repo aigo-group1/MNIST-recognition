@@ -5,8 +5,8 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-model = load_model('MNIST-recognition/mnist_model/model.h5')
-model.load_weights('MNIST-recognition/mnist_model/weights1.h5')
+model = load_model('MNIST-recognition/mnist_model/Model.h5')
+model.load_weights('MNIST-recognition/mnist_model/Weights.h5')
 #model.summary()
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -22,13 +22,16 @@ validdatagen = ImageDataGenerator(
     zoom_range=0.1
 )
 validdatagen.fit(x_train)
-image = cv2.imread("MNIST-recognition/mnist_model/image/4.jpg", 0)
-blur = cv2.GaussianBlur(image, (1, 1), 0)
-ret, th = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
-thre = np.expand_dims(th, axis=-1).astype(np.float)/255.0
-results = model.predict_generator(
-    validdatagen.flow(np.array([thre]), batch_size=1, shuffle=False),
-    steps=1
-)
-y_pred = np.argmax(results, axis=-1)
-print(y_pred)
+
+def Prediction(path):
+    image = cv2.imread("MNIST-recognition/mnist_model/image/"+path,0)
+    blur = cv2.GaussianBlur(image, (1, 1), 0)
+    ret, th = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+    thre = np.expand_dims(th, axis=-1).astype(np.float)/255.0
+    results = model.predict_generator(
+        validdatagen.flow(np.array([thre]), batch_size=1, shuffle=False),
+        steps=1
+    )
+    y_pred = np.argmax(results, axis=-1)
+    return y_pred
+print(Prediction("7.jpg"))

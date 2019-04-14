@@ -31,7 +31,6 @@ x2 = Conv2D(48, kernel_size=(3, 3), activation='relu')(x2)
 x2 = BatchNormalization()(x2)
 
 x = Concatenate()([x1, x2])
-x2 = MaxPooling2D(pool_size=(2, 2))(x)
 x = Flatten()(x)
 x = Dense(64, activation='relu')(x)
 x = Dense(128, activation='relu')(x)
