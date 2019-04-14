@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 model = load_model('MNIST-recognition/mnist_model/Model.h5')
 model.load_weights('MNIST-recognition/mnist_model/Weights.h5')
-#model.summary()
+model.summary()
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 #plt.imshow(x_test[0])
