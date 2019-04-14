@@ -65,7 +65,7 @@ validdatagen = ImageDataGenerator(
 
 datagen.fit(x_train)
 validdatagen.fit(x_train)
-model.fit_generator(datagen.flow(x_train, y_train, batch_size=132),
+model.fit_generator(datagen.flow(x_train, y_train, batch_size=32),
                     steps_per_epoch=len(x_train)//32,
                     epochs=20,
                     validation_data=validdatagen.flow(x_test, y_test, batch_size=32),
