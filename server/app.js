@@ -6,12 +6,12 @@ const bodyParser = require('body-parser');
 const hbs = require('hbs');
 
 const viewPath = path.join(__dirname,'./views');
-
+const uploadPath = path.join(__dirname,'');
 const router = require('./router/router');
 
 console.log(publicPath);
 console.log(viewPath);
-
+app.use(express.static(uploadPath));
 app.use(express.json());
 app.use(express.static(publicPath));
 app.use(bodyParser.json());
