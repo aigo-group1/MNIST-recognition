@@ -3,8 +3,8 @@ from keras.layers import Input, Dense, Conv2D, MaxPooling2D, Flatten
 from keras.layers import BatchNormalization
 from keras.layers import Add, Concatenate
 from keras.datasets import mnist
-import numpy as np
 from keras.preprocessing.image import ImageDataGenerator
+import numpy as np
 
 input = Input(shape=(28, 28, 1))
 x = Conv2D(32, kernel_size=(3, 3), padding='same', activation='relu')(input)

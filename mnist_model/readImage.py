@@ -18,7 +18,7 @@ validdatagen = ImageDataGenerator(
 validdatagen.fit(np.expand_dims(mnist.load_data()[0][0], axis=-1).astype(np.float)/255.0)
 
 def Prediction(path):
-    image = cv2.imread("MNIST-recognition/mnist_model/image/"+path,0)
+    image = cv2.imread(path,0)
     blur = cv2.GaussianBlur(image, (1, 1), 0)
     th = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)[1]
     thre = np.expand_dims(th, axis=-1).astype(np.float)/255.0
@@ -28,4 +28,4 @@ def Prediction(path):
     )
     y_pred = np.argmax(results, axis=-1)
     return y_pred
-#print(Prediction("4.jpg"))
+#print(Prediction("MNIST-recognition/mnist_model/image/7.jpg"))
