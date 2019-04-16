@@ -5,8 +5,8 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-model = load_model('MNIST-recognition/mnist_model/Model.h5')
-model.load_weights('MNIST-recognition/mnist_model/Weights.h5')
+model = load_model('mnist_model/Model.h5')
+model.load_weights('mnist_model/Weights.h5')
 #model.summary()
 
 validdatagen = ImageDataGenerator(
@@ -17,8 +17,7 @@ validdatagen = ImageDataGenerator(
 )
 validdatagen.fit(np.expand_dims(mnist.load_data()[0][0], axis=-1).astype(np.float)/255.0)
 
-def Prediction(path):
-    image = cv2.imread(path,0)
+def Prediction(image):
     blur = cv2.GaussianBlur(image, (1, 1), 0)
     th = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)[1]
     thre = np.expand_dims(th, axis=-1).astype(np.float)/255.0
@@ -28,4 +27,7 @@ def Prediction(path):
     )
     y_pred = np.argmax(results, axis=-1)
     return y_pred
-#print(Prediction("MNIST-recognition/mnist_model/image/7.jpg"))
+
+
+#image = cv2.imread("mnist_model/image/4.jpg", 0)
+#print(Prediction(iden1[2]))
