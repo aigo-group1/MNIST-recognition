@@ -2,6 +2,7 @@ const Image = require('../models/image');
 const path = require('path');
 const uploadPath = path.join(__dirname,'/../');
 const {spawn} = require('child_process');
+
 predict = (modelPath,imagePath)=>{
     return new Promise((get,drop)=>{
         const pyProg = spawn('python', [modelPath,imagePath]);
@@ -33,6 +34,9 @@ uploadImage = async (req,res)=>{
         console.log(err)
     }) 
 };
+
+
+
 module.exports = {
     uploadImage:uploadImage
 }
