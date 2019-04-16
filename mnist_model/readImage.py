@@ -1,3 +1,10 @@
+import sys
+#imagePath = sys.argv[1].replace('\\','/')
+
+sys.path.insert(0,'D:\\MNIST-recognition\\mnist_detection')
+
+print(sys.path)
+
 from keras.preprocessing.image import ImageDataGenerator
 from keras.datasets import mnist
 from keras.models import load_model
@@ -5,9 +12,8 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-model = load_model('MNIST-recognition/mnist_model/Model.h5')
-model.load_weights('MNIST-recognition/mnist_model/Weights.h5')
-model.summary()
+model = load_model('/MNIST-recognition/mnist_model/Model.h5')
+model.load_weights('/MNIST-recognition/mnist_model/Weights.h5')
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 #plt.imshow(x_test[0])
@@ -34,4 +40,12 @@ def Prediction(path):
     )
     y_pred = np.argmax(results, axis=-1)
     return y_pred
-#print(Prediction("7.jpg"))
+
+import detection as detec
+
+imagedata = detec.detectimage('D:/MNIST-recognition/server/upload/image2.jpg')
+
+print(imagedata)
+
+
+
