@@ -6,7 +6,6 @@ const {spawn} = require('child_process');
 predict = (modelPath,imagePath)=>{
     return new Promise((get,drop)=>{
         const pyProg = spawn('python', [modelPath,imagePath]);
-        
         pyProg.stdout.on('data',(data)=>{
             get(data.toString())
         })
@@ -28,14 +27,35 @@ uploadImage = async (req,res)=>{
 
     const result = await image.save();
 
-    predict('../mnist_model/readImage.py',pathToUpload).then((data)=>{
+    predict('../Predict_image.py',pathToUpload).then((data)=>{
+
         console.log(data)
+       const arr = data.split('\n');
+       const result = arr.map((value)=>{
+           return value.trim();
+       })
+       const obj = result.map((value)=>{
+           const temp = value.split('');
+           return temp;
+       })
+       obj2 = [];
+       obj.pop();
+       if(obj.length % 2 == 0 && obj.length>0){
+            for(var i =0;i<=obj.length-2;i+=2){
+                obj2.push({cmnd:obj[i],birthday:obj[i+1]})
+            }
+       }
+       else if(obj.length %2 !=0 &&obj.length >0) {
+           obj.push([]);
+           for(var i =0;i<=obj.length-2;i+=2){
+                obj2.push({cmnd:obj[i],birthday:obj[i+1]})
+            }
+       }
+       res.render('predict',{obj2});
     }).catch((err)=>{
         console.log(err)
     }) 
 };
-
-
 
 module.exports = {
     uploadImage:uploadImage
