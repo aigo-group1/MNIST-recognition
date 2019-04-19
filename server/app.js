@@ -21,7 +21,36 @@ app.set('view engine','hbs');
 app.set('views',viewPath);
 
 
+
+const cached = require('memcached');
+
+const memcached = new cached("127.0.0.1:3000");
+
+memcachedMidleware = (duration)=>{
+    return (req,res,next)=>{
+        const key = "__express__" + req.originalUrl || req.url;
+        memcached.get(key,(err,data)=>{
+            if(data){
+                res.send(data);
+                return;
+            }
+            else{
+                res.sendRespone = res.send;
+                res.send = (body)=>{
+                    memcached.set(key,body,(duration*60),(err)=>{
+
+                    })
+                    res.sendRespone(body);
+                }
+                next();
+            }
+        })
+    }
+}
+
 app.use('/',router);
+
+module.exports = {memcachedMidleware:memcachedMidleware};
 
 app.listen(3000,()=>{
     console.log('server is in port 3000');
