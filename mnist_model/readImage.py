@@ -4,29 +4,37 @@ import sys
 from keras.preprocessing.image import ImageDataGenerator
 from keras.datasets import mnist
 from keras.models import load_model
+import keras.backend as K
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-model = load_model('/MNIST-recognition/mnist_model/Model.h5')
-model.load_weights('/MNIST-recognition/mnist_model/Weights.h5')
+def getValiddatagen():
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+        #plt.imshow(x_test[0])
+    x_train = np.expand_dims(x_train, axis=-1).astype(np.float)/255.0
+        #x_test = np.expand_dims(x_test, axis=-1).astype(np.float)/255.0
+        #x_train.shape
+        #model.summary()
 
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
-#plt.imshow(x_test[0])
-x_train = np.expand_dims(x_train, axis=-1).astype(np.float)/255.0
-#x_test = np.expand_dims(x_test, axis=-1).astype(np.float)/255.0
-#x_train.shape
-#model.summary()
+    validdatagen = ImageDataGenerator(
+            featurewise_center=True,
+            featurewise_std_normalization=True,
+            rotation_range=20,
+            zoom_range=0.1
+    )
+    validdatagen.fit(np.expand_dims(mnist.load_data()[0][0], axis=-1).astype(np.float)/255.0)
 
-validdatagen = ImageDataGenerator(
-    featurewise_center=True,
-    featurewise_std_normalization=True,
-    rotation_range=20,
-    zoom_range=0.1
-)
-validdatagen.fit(np.expand_dims(mnist.load_data()[0][0], axis=-1).astype(np.float)/255.0)
+    return validdatagen
 
-def Prediction(image):
+def loadmodel():
+    K.clear_session()
+    model = load_model('/MNIST-recognition/mnist_model/Model.h5')
+    model.load_weights('/MNIST-recognition/mnist_model/Weights.h5')
+    return model
+
+def Prediction(image,model,validdatagen):
+
     blur = cv2.GaussianBlur(image, (1, 1), 0)
     th = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
     thre = np.expand_dims(th, axis=-1).astype(np.float)/255.0
@@ -36,4 +44,3 @@ def Prediction(image):
     )
     y_pred = np.argmax(results, axis=-1)
     return y_pred
-

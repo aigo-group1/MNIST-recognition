@@ -50,7 +50,6 @@ memcachedMidleware = (duration)=>{
 
 app.use('/',router);
 
-module.exports = {memcachedMidleware:memcachedMidleware};
 
 app.listen(3000,()=>{
     console.log('server is in port 3000');

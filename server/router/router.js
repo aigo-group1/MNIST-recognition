@@ -31,7 +31,7 @@ const upload = multer({
 router.get('/',(req,res)=>{
     res.render('index');
 })
-router.post('/',upload.single('image'),app.memcachedMidleware(20),ImageController.uploadImage,(err,req,res,next)=>{
+router.post('/',upload.single('image'),ImageController.uploadImage,(err,req,res,next)=>{
     if(err){
         res.status(400).send({error:err.message});
     }

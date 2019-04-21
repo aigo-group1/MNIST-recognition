@@ -25,7 +25,7 @@
 <body>
 	
 	<div class="container">
-        {{#each obj2}}          
+        {{#each obj}}          
         <table class="table table-bordered">
             <tbody>
             <tr>
@@ -34,13 +34,13 @@
             </tr>
             <tr>
                 <td>Số CMND</td>
-                {{#each this.cmnd}}
+                {{#each this.iden}}
                 <td>{{this}}</td>
                 {{/each}}
             </tr>
             <tr>
                 <td>Ngày Sinh</td>
-                {{#each this.birthday}}
+                {{#each this.date}}
                      <td>{{this}}</td>
                 {{/each}}
             </tr>

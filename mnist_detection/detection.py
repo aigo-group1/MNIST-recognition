@@ -207,19 +207,16 @@ def detect_image(imagePath):
 
         #resize anh 1/2
         resized_image = cv2.resize(img, (int(1024), int(768)))
-        save_for_debug(imagePath, resized_image, "010_resized")
+
         #resized_image = img
         #chuyen anh mau ve anh xam
         img_gray = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
-        save_for_debug(imagePath, img_gray, "020_gray")
 
         #chuyen anh ve binary
         imgBinary = cv2.threshold(img_gray, 135, 255, cv2.THRESH_BINARY)[1]
-        save_for_debug(imagePath, imgBinary, "030_binary")
 
         #bounding image,lay ra cac doi tuong
         contours,hierachy=cv2.findContours(imgBinary,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-        save_contour_for_debug(imagePath, resized_image, contours, "040_contours")
         #
         widthBound = 0
         heightBound =0
@@ -245,7 +242,6 @@ def detect_image(imagePath):
                                 widthBound = widthBound + w
                                 heightBound = heightBound + h
                                 dem = dem + 1
-        save_for_debug(imagePath, resized_image, "050_rect")
 
         #cv2.imshow("test-anh",resized_image)
         #cv2.waitKey(0)
@@ -259,7 +255,6 @@ def detect_image(imagePath):
                         lstSame.append(lstRect[i])
                         lstFilter.append(lstSame) 
                         lstSame = []
-        save_for_debug(imagePath, imgBinary, "030_binary")
 
         #lay cot co so o nhieu nhat de loc label
         #remove doi tuong bat thuong ra khoi cot

@@ -3,6 +3,11 @@ const path = require('path');
 const uploadPath = path.join(__dirname,'/../');
 const {spawn} = require('child_process');
 
+const request  = require('request');
+
+const pythonServerUrl = 'http://127.0.0.1:5000/predict/'; 
+
+/*
 predict = (modelPath,imagePath)=>{
     return new Promise((get,drop)=>{
         const pyProg = spawn('python', [modelPath,imagePath]);
@@ -56,7 +61,30 @@ uploadImage = async (req,res)=>{
         console.log(err)
     }) 
 };
+*/
 
+uploadImage = async (req,res)=>{
+
+    const filePath = req.file.path;
+
+    const imagepath = filePath.toString().split('\\')[1]
+
+    const pathToUpload = path.join(uploadPath,filePath);
+    
+    const image = new Image({imagePath:filePath});
+
+    const result = await image.save();
+
+    request({uri:pythonServerUrl + imagepath},(err,req2)=>{
+        if(err) console.log(err);
+        else{
+            obj = JSON.parse(req2.body)
+            console.log(obj)
+            res.render('predict',{obj})
+        }
+    })
+
+};
 module.exports = {
     uploadImage:uploadImage
 }
