@@ -12,8 +12,6 @@ model = load_model('mnist_model/Model1.h5')
 model.load_weights('mnist_model/Weights1.h5')
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
-for image in x_train:
-      image[0:2,:]=image[26:28, :]=image[:, 26:28]=image[:, 0:2]=255
 x_train = np.expand_dims(x_train, axis=-1).astype(np.float)/255.0
 
 validdatagen = ImageDataGenerator(
@@ -25,6 +23,7 @@ validdatagen = ImageDataGenerator(
 validdatagen.fit(x_train)
 
 def Prediction(image):
+    #im_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     thre = np.expand_dims(image, axis=-1).astype(np.float32)/255.0
     results = model.predict_generator(
         validdatagen.flow(np.array([thre]), batch_size=1, shuffle=False),
@@ -33,3 +32,5 @@ def Prediction(image):
     y_pred = np.argmax(results, axis=-1)
     return y_pred
 
+#image = cv2.imread("piece0-5-(28, 28).jpg")
+#print(Prediction(image))

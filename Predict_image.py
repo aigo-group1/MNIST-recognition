@@ -15,3 +15,4 @@ for line_image in list_image:
 
 for line in prediction:
     print(line)
+    print("")
