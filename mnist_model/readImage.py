@@ -30,7 +30,12 @@ def getvaliddatagen():
     validdatagen.fit(x_train)
     return validdatagen
 
+<<<<<<< HEAD
 def Prediction(image,model,validdatagen):
+=======
+def Prediction(image):
+    #im_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+>>>>>>> ff109ed5b5207efd335b2ec8ad9f1dc69f26bd37
     thre = np.expand_dims(image, axis=-1).astype(np.float32)/255.0
     results = model.predict_generator(
         validdatagen.flow(np.array([thre]), batch_size=1, shuffle=False),
@@ -38,3 +43,9 @@ def Prediction(image,model,validdatagen):
     )
     y_pred = np.argmax(results, axis=-1)
     return y_pred
+<<<<<<< HEAD
+=======
+
+#image = cv2.imread("piece0-5-(28, 28).jpg")
+#print(Prediction(image))
+>>>>>>> ff109ed5b5207efd335b2ec8ad9f1dc69f26bd37

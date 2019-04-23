@@ -8,30 +8,9 @@ import numpy as np
 
 def reset_model():
     input = Input(shape=(28, 28, 1))
-    x = Conv2D(32, kernel_size=(3, 3), padding='same', activation='relu')(input)
+    x = Conv2D(32, kernel_size=(5, 5), activation='relu')(input)
     x = BatchNormalization()(x)
-
-    x1 = Conv2D(32, kernel_size=(3, 3), padding='same', activation='relu')(x)
-    x1 = BatchNormalization()(x1)
-
-    x1 = Conv2D(32, kernel_size=(3, 3), padding='same', activation='relu')(x1)
-    x1 = BatchNormalization()(x1)
-
-    x = Add()([x, x1])
     x = MaxPooling2D(pool_size=(2, 2))(x)
-
-    x1 = Conv2D(48, kernel_size=(3, 3), activation='relu')(x)
-    x1 = BatchNormalization()(x1)
-
-    x1 = Conv2D(64, kernel_size=(3, 3), strides=(2, 2), activation='relu')(x1)
-    x1 = BatchNormalization()(x1)
-
-    x2 = MaxPooling2D(pool_size=(2, 2))(x)
-
-    x2 = Conv2D(48, kernel_size=(3, 3), activation='relu')(x2)
-    x2 = BatchNormalization()(x2)
-
-    x = Concatenate()([x1, x2])
     x = Flatten()(x)
     x = Dense(64, activation='relu')(x)
     x = Dense(128, activation='relu')(x)
@@ -39,12 +18,8 @@ def reset_model():
     model = Model(inputs=input, outputs=output)
     model.compile(loss='sparse_categorical_crossentropy',
                 optimizer='adam', metrics=['accuracy'])
-
+                
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    for image in x_train:
-        image[0:2, :] = image[26:28, :] = image[:, 26:28] = image[:, 0:2] = 255
-    for image in x_test:
-        image[0:2, :] = image[26:28, :] = image[:, 26:28] = image[:, 0:2] = 255
     x_train = np.expand_dims(x_train, axis=-1).astype(np.float32)/255.0
     x_test = np.expand_dims(x_test, axis=-1).astype(np.float32)/255.0
 
