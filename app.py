@@ -4,7 +4,7 @@ import json
 from mnist_model import readImage
 import Predict_image as pre
 import numpy as np
-import keras.backend as K
+
 # Don't forget to run `memcached' before running this code
 app = Flask(__name__)
 @app.route('/predict/<image_name>')

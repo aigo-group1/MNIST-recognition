@@ -79,7 +79,7 @@ uploadImage = async (req,res)=>{
         if(err) console.log(err);
         else{
             obj = JSON.parse(req2.body)
-            console.log(obj)
+            console.log(req2.body)
             res.render('predict',{obj})
         }
     })

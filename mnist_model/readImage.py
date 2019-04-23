@@ -1,4 +1,4 @@
-import sys
+#import sys
 #imagePath = sys.argv[1].replace('\\','/')
 
 from keras.preprocessing.image import ImageDataGenerator
@@ -9,35 +9,29 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-def getValiddatagen():
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()
-        #plt.imshow(x_test[0])
-    x_train = np.expand_dims(x_train, axis=-1).astype(np.float)/255.0
-        #x_test = np.expand_dims(x_test, axis=-1).astype(np.float)/255.0
-        #x_train.shape
-        #model.summary()
-
-    validdatagen = ImageDataGenerator(
-            featurewise_center=True,
-            featurewise_std_normalization=True,
-            rotation_range=20,
-            zoom_range=0.1
-    )
-    validdatagen.fit(np.expand_dims(mnist.load_data()[0][0], axis=-1).astype(np.float)/255.0)
-
-    return validdatagen
-
 def loadmodel():
     K.clear_session()
-    model = load_model('/MNIST-recognition/mnist_model/Model.h5')
-    model.load_weights('/MNIST-recognition/mnist_model/Weights.h5')
+    model = load_model('mnist_model/Model1.h5')
+    model.load_weights('mnist_model/Weights1.h5')
     return model
 
-def Prediction(image,model,validdatagen):
+def getvaliddatagen():
+    (x_train, y_train), (x_test, y_test) = mnist.load_data()
+    for image in x_train:
+        image[0:2,:]=image[26:28, :]=image[:, 26:28]=image[:, 0:2]=255
+    x_train = np.expand_dims(x_train, axis=-1).astype(np.float)/255.0
 
-    blur = cv2.GaussianBlur(image, (1, 1), 0)
-    th = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
-    thre = np.expand_dims(th, axis=-1).astype(np.float)/255.0
+    validdatagen = ImageDataGenerator(
+        featurewise_center=True,
+        featurewise_std_normalization=True,
+        rotation_range=20,
+        zoom_range=0.1
+    )
+    validdatagen.fit(x_train)
+    return validdatagen
+
+def Prediction(image,model,validdatagen):
+    thre = np.expand_dims(image, axis=-1).astype(np.float32)/255.0
     results = model.predict_generator(
         validdatagen.flow(np.array([thre]), batch_size=1, shuffle=False),
         steps=1

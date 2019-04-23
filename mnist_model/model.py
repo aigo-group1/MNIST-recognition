@@ -41,12 +41,14 @@ def reset_model():
                 optimizer='adam', metrics=['accuracy'])
 
     (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    #plt.imshow(x_test[0])
-    x_train = np.expand_dims(x_train, axis=-1).astype(np.float)/255.0
-    x_test = np.expand_dims(x_test, axis=-1).astype(np.float)/255.0
-    #n.shape
+    for image in x_train:
+        image[0:2, :] = image[26:28, :] = image[:, 26:28] = image[:, 0:2] = 255
+    for image in x_test:
+        image[0:2, :] = image[26:28, :] = image[:, 26:28] = image[:, 0:2] = 255
+    x_train = np.expand_dims(x_train, axis=-1).astype(np.float32)/255.0
+    x_test = np.expand_dims(x_test, axis=-1).astype(np.float32)/255.0
 
-    model.save('Model.h5')
+    model.save('Model1.h5')
     model.summary()
 
     datagen = ImageDataGenerator(
@@ -72,6 +74,6 @@ def reset_model():
                         validation_data=validdatagen.flow(x_test, y_test, batch_size=32),
                         validation_steps=len(x_test)//32)
 
-    model.save_weights('Weights.h5')
+    model.save_weights('Weights1.h5')
 
     return model
