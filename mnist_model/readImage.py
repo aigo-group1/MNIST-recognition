@@ -11,31 +11,30 @@ import matplotlib.pyplot as plt
 
 def loadmodel():
     K.clear_session()
-    model = load_model('mnist_model/Model1.h5')
-    model.load_weights('mnist_model/Weights1.h5')
+    model = load_model('mnist_model/model (1).h5')
+    model.load_weights('mnist_model/weights (1).h5')
     return model
 
 def getvaliddatagen():
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()
-    for image in x_train:
-        image[0:2,:]=image[26:28, :]=image[:, 26:28]=image[:, 0:2]=255
+    x_train = mnist.load_data()[0][0]
+    index = 0
+    a = 37
+    for i in range(len(x_train)):
+        path = "frame/frame "+str(index)+".jpg"
+        frame = cv2.imread(path, 0)
+        x_train[i] = np.maximum(np.array(x_train[i]), np.array(frame))
+        index = (index+a) % 120
+
     x_train = np.expand_dims(x_train, axis=-1).astype(np.float)/255.0
 
     validdatagen = ImageDataGenerator(
         featurewise_center=True,
         featurewise_std_normalization=True,
-        rotation_range=20,
-        zoom_range=0.1
     )
     validdatagen.fit(x_train)
     return validdatagen
 
-<<<<<<< HEAD
 def Prediction(image,model,validdatagen):
-=======
-def Prediction(image):
-    #im_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
->>>>>>> ff109ed5b5207efd335b2ec8ad9f1dc69f26bd37
     thre = np.expand_dims(image, axis=-1).astype(np.float32)/255.0
     results = model.predict_generator(
         validdatagen.flow(np.array([thre]), batch_size=1, shuffle=False),
@@ -43,9 +42,3 @@ def Prediction(image):
     )
     y_pred = np.argmax(results, axis=-1)
     return y_pred
-<<<<<<< HEAD
-=======
-
-#image = cv2.imread("piece0-5-(28, 28).jpg")
-#print(Prediction(image))
->>>>>>> ff109ed5b5207efd335b2ec8ad9f1dc69f26bd37
