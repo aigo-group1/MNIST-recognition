@@ -40,14 +40,14 @@ def detect_image(path):
     img_gray = cv2.cvtColor(resized_image, cv2.COLOR_BGR2GRAY)
 
     # chuyen anh ve binary
-    imgBinary = cv2.threshold(img_gray, 135, 255, cv2.THRESH_BINARY)[1]
+    imgBinary = cv2.threshold(img_gray, 127, 255, cv2.THRESH_BINARY)[1]
 
     # bounding image,lay ra cac doi tuong
     contours, hierachy = cv2.findContours(
         imgBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-    save_contour_for_debug("D:\\Python\\img_debug\\img",
-                        resized_image, contours, "step_contours")
+    #save_contour_for_debug("D:\\Python\\img_debug\\img",
+    #                    resized_image, contours, "step_contours")
 
 
     # print(len(contours))
@@ -82,9 +82,9 @@ def detect_image(path):
         if(rect[3] < averageHeight-5):
             lstRect.remove(rect)
 
-    for rect in lstRect:
-        cv2.rectangle(resized_image, (rect[0], rect[1]),
-                    (rect[0]+rect[2], rect[1]+rect[3]), (255, 0, 0), 2)
+    #for rect in lstRect:
+    #    cv2.rectangle(resized_image, (rect[0], rect[1]),
+    #                (rect[0]+rect[2], rect[1]+rect[3]), (255, 0, 0), 2)
 
 
     # cv2.imshow("test-anh",resized_image)
@@ -107,7 +107,6 @@ def detect_image(path):
     for row in lstRows:
         if len(row) == 20:
             lstRows.remove(row)
-
     lstDataFinal = []
     # cat image va tinh pixel
     for row in lstRows:

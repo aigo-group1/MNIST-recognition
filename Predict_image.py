@@ -24,8 +24,8 @@ def predict(imagePath,model):
     return listiden,listdate
 
 
-#(listiden, listdate) = predict("mnist_detection/test3.jpg", model)
-#for line in listiden:
-#    print(line)
-#for line in listdate:
-#    print(line)
+(listiden, listdate) = predict("mnist_detection/test3.jpg", model)
+for line in listiden:
+    print(line)
+for line in listdate:
+    print(line)
