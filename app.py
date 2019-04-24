@@ -12,6 +12,7 @@ def handle(image_name):
     model = readImage.loadmodel()
     dirPath = os.getcwd().replace('\\','/')
     imagePath = dirPath + '/server/upload/'+image_name
+    print(imagePath)
     predict_iden,predict_date = pre.predict(imagePath,model)
     list_obj = []
     for i in range(len(predict_iden)):

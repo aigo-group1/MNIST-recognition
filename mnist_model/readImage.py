@@ -35,7 +35,6 @@ def getvaliddatagen():
     return validdatagen
 
 def Prediction(image,model,validdatagen):
-    thre = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY_INV)
     thre = np.expand_dims(image, axis=-1).astype(np.float32)/255.0
     results = model.predict_generator(
         validdatagen.flow(np.array([thre]), batch_size=1, shuffle=False),

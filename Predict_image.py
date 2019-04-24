@@ -2,7 +2,7 @@ from mnist_detection import detection
 from mnist_model import readImage
 import numpy as np
 #import sys 
-
+import cv2
 model = readImage.loadmodel()
 
 def predict(imagePath,model):
@@ -24,8 +24,8 @@ def predict(imagePath,model):
     return listiden,listdate
 
 
-(listiden, listdate) = predict("mnist_detection/test3.jpg", model)
-for line in listiden:
-    print(line)
-for line in listdate:
-    print(line)
+#(listiden, listdate) = predict("mnist_detection/test3.jpg", model)
+#for line in listiden:
+#    print(line)
+#for line in listdate:
+#    print(line)
