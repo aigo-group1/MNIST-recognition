@@ -112,19 +112,19 @@ def editting_image(image_path):
     pts1 = np.float32([A1, B1, A2, B2])
     pts2 = np.float32([[0, 0], [1500, 0], [0, 1000], [1500, 1000]])
     M = cv2.getPerspectiveTransform(pts1, pts2)
-    dst1 = cv2.warpPerspective(image, M, (1500, 1000))
+    #dst1 = cv2.warpPerspective(image, M, (1500, 1000))
     #save_for_debug(image_path, dst1, "07_cutting_word", dst1.shape)
 
     dst2 = cv2.warpPerspective(thre, M, (1500, 1000))
     #save_for_debug(image_path, dst2, "08_cutting_word_binary_inv", dst2.shape)
 
-    contours = cv2.findContours(
-        dst2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+    #contours = cv2.findContours(
+    #    dst2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
 
     #save_contour_for_debug(image_path, dst1, contours, "09_contours_inv", dst1.shape)
     return dst2
 
-#img = editting_image("test.jpg")
+#img = editting_image("mnist_detection/test2.jpg")
 
 
 def detect_image(path_image):
@@ -140,40 +140,34 @@ def detect_image(path_image):
     #print(len(listRect))
     listRect.sort(key=sortSecond)
     index = 0
-    list_image_detected = []
+    list_image_detected = np.zeros(shape=(1,28,28)) 
     while index < len(listRect):
         index += 20
         list_iden = listRect[index:index+12]
-        #print(list_iden)
         list_iden.sort(key=sortFirst)
-        #print(list_iden)
-        iden = []
         for i in range(len(list_iden)):
             (x, y, w, h) = list_iden[i]
             piece_iden = image[y:y+h, x:x+w]
-            #cv2.imwrite("piece"+str(i)+".jpg", piece_image)
-            piece_iden = cv2.resize(
-                piece_iden, (28, 28), interpolation=cv2.INTER_AREA)
-            iden.append(piece_iden)
-        list_image_detected.append(iden)
+            piece_iden = cv2.resize(piece_iden, (28, 28), interpolation=cv2.INTER_AREA)
+            piece_iden = np.array(piece_iden).reshape(1,28,28)
+            list_image_detected = np.append(list_image_detected,piece_iden,axis=0)
         index += 12
         list_date = listRect[index:index+8]
         list_date.sort(key=sortFirst)
-        #print(list_date)
-        date = []
         for i in range(len(list_date)):
             (x, y, w, h) = list_date[i]
             piece_date = image[y:y+h, x:x+w]
-            #cv2.imwrite("piece"+str(i)+".jpg", piece_date)
-            piece_date = cv2.resize(
-                piece_date, (28, 28), interpolation=cv2.INTER_AREA)
-            date.append(piece_date)
-        list_image_detected.append(date)
+            piece_date = cv2.resize(piece_date, (28, 28), interpolation=cv2.INTER_AREA)
+            piece_date = np.array(piece_date).reshape(1, 28, 28)
+            list_image_detected = np.append(list_image_detected, piece_date, axis=0)
         index += 8
+    list_image_detected = np.delete(list_image_detected, 0, 0)
+    list_image_detected = np.expand_dims(list_image_detected,axis=-1).astype(np.float32)/255.0
     return list_image_detected
 
 
 #image = detect_image("mnist_detection/test3.jpg")
+#print(image.shape)
 #for i in range(len(image)):
 #    for j in range(len(image[i])):
-#        cv2.imwrite("piece"+str(i)+"-"+str(j)+".jpg",image[i][j])
+#       cv2.imwrite("piece"+str(i)+"-"+str(j)+".jpg",image[i][j])

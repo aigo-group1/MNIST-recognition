@@ -15,13 +15,13 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage:storage,
     limits:{
-        fileSize:2000000,
+        fileSize:6000000,
     },
     fileFilter(req,file,cb){
         if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
             cb(new Error('Please Upload Image File'),false);
         }
-        else if(file.size >2000000){
+        else if(file.size >6000000){
             cb(new Error('The size of file is too large'),false)
         }
         else cb(undefined,true);

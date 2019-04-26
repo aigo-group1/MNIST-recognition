@@ -67,13 +67,14 @@ uploadImage = async (req,res)=>{
 
     const filePath = req.file.path;
 
-    const imagepath = filePath.toString().split('\\')[1]
+    const imagepath = filePath.toString().split('/')[1]
 
     const pathToUpload = path.join(uploadPath,filePath);
     
     const image = new Image({imagePath:filePath});
 
     const result = await image.save();
+
 
     request({uri:pythonServerUrl + imagepath},(err,req2)=>{
         if(err) console.log(err);
