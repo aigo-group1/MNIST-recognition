@@ -22,7 +22,7 @@ def predict(imagePath,model,validdatagen):
 #    model = pickle.load(pickle_file)
 #with open('mnist_model/validdatagen.pkl', 'rb') as pickle_file:
 #    validdatagen = pickle.load(pickle_file)
-#listiden, listdate = predict('mnist_detection/test3.jpg', model, validdatagen)
+#listiden, listdate = predict('mnist_detection/image1.jpg', model, validdatagen)
 #for line in listiden:
 #    print(line)
 #for line in listdate:

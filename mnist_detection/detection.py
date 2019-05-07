@@ -24,150 +24,89 @@ def save_contour_for_debug(imagePath, debug_img, contours, debug_name, image_sha
     output = debug_img.copy()
     for i in contours:
         (x, y, w, h) = cv2.boundingRect(i)
-        cv2.rectangle(output, (x, y), (x+w, y+h), (0, 0, 255), 2)
+        if w > 50 and w < 100 and h > 50 and h < 100:
+            cv2.rectangle(output, (x, y), (x+w, y+h), (0, 255, 0), 3)
     cv2.imwrite(save_path, output)
     #print("sum of contours = ",len(contours))
 
 
 def editting_image(image_path):
     image = cv2.imread(image_path)
-    #save_for_debug(image_path, image, "00_original", image.shape)
+    #save_for_debug(image_path, image, '00_origin', image.shape)
 
-    im_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    #save_for_debug(image_path, im_gray, "01_gray", im_gray.shape)
+    im_resized = cv2.resize(image, (2000, 1500),interpolation=cv2.INTER_AREA)
+    #save_for_debug(image_path, im_resized,'01_resized', im_resized.shape)
 
-    thre = cv2.threshold(im_gray, 150, 255, cv2.THRESH_BINARY)[1]
-    #save_for_debug(image_path, thre, "02_thresh_binary", thre.shape)
+    lower_white = np.array([0, 0, 50], dtype=np.uint8)
+    upper_white = np.array([117, 135, 255], dtype=np.uint8)
 
-    contours = cv2.findContours(
-        thre, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
-    #save_contour_for_debug(image_path, image, contours, "03_contours", thre.shape)
+    mask = cv2.inRange(im_resized, lower_white, upper_white)
+    #save_for_debug(image_path, mask, "02_mask_red", mask.shape)
 
-    height, width, channels = image.shape
-    #print("height = ", height)
-    #print("width = ",width)
-    #print("channels = ",channels)
-
-    for i in contours:
-        (x, y, w, h) = cv2.boundingRect(i)
-        if(w > width/2 and h > height/2):
-            image = image[y:y+h, x:x+w, :]
-            #save_for_debug(image_path, image, "04_image_after_cutting", image.shape)
-
-            im_gray = im_gray[y:y+h, x:x+w]
-            #save_for_debug(image_path, im_gray, "04_gray_after_cutting", im_gray.shape)
-
-    height1, width1, channels1 = image.shape
-
-    thre = cv2.threshold(im_gray, 150, 255, cv2.THRESH_BINARY_INV)[1]
-    #save_for_debug(image_path, thre, "05_thresh_binary_inv", thre.shape)
+    mask = cv2.GaussianBlur(mask, (9, 9), 0)
+    #save_for_debug(image_path, mask, "03_mask_gauss", mask.shape)
 
     contours = cv2.findContours(
-        thre, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
-    #save_contour_for_debug(image_path, image, contours,"06_contours_inv", thre.shape)
-
-    h_avg = 0
-    index = 0
-    A1 = np.array([height1/2, width1/2])
-    B1 = np.array([height1/2, width1/2])
-    A2 = np.array([height1/2, width1/2])
-    B2 = np.array([height1/2, width1/2])
-    for i in contours:
-        (x, y, w, h) = cv2.boundingRect(i)
-        if(w < 100 and h < 100 and w > 10 and h > 10):
-            h_avg += h
-            index += 1
-    #print("index = ",index)
-    h_avg /= index
-    #sum_contours_ivalid = 0
-    for i in contours:
-        (x, y, w, h) = cv2.boundingRect(i)
-        if(h > h_avg and w < 100 and h < 100):
-            #sum_contours_ivalid += 1
-            if(math.sqrt(x*x + y*y) < math.sqrt(A1[0]*A1[0] + A1[1]*A1[1])):
-                A1[0] = x
-                A1[1] = y
-            if(math.sqrt(x*x + (y-height)*(y-height)) < math.sqrt(A2[0]*A2[0] + (A2[1]-height)*(A2[1]-height))):
-                A2[0] = x
-                A2[1] = y
-            if(math.sqrt((x-width)*(x-width) + y*y) < math.sqrt((B1[0]-width)*(B1[0]-width) + B1[1]*B1[1])):
-                B1[0] = x
-                B1[1] = y
-            if(math.sqrt((x-width)*(x-width) + (y-height)*(y-height)) < math.sqrt((B2[0]-width)*(B2[0]-width) + (B2[1]-height)*(B2[1]-height))):
-                B2[0] = x
-                B2[1] = y
-        # cv2.rectangle(im_cut,(x,y),(x+w,y+h),(0,255,0),3)
-    #print("sum_contours_ivalid = ",sum_contours_ivalid)
-    A1[1] -= height//100
-    B1[1] -= height//100
-    A2[1] = A2[1] + height//30
-    B2[1] = A2[1]
-    B1[0] += width//40
-    B2[0] += width//40
-    #print("A1 = ", A1)
-    #print("A2 = ", A2)
-    #print("B1 = ", B1)
-    #print("B2 = ", B2)
-
-    pts1 = np.float32([A1, B1, A2, B2])
-    pts2 = np.float32([[0, 0], [1500, 0], [0, 1000], [1500, 1000]])
-    M = cv2.getPerspectiveTransform(pts1, pts2)
-    #dst1 = cv2.warpPerspective(image, M, (1500, 1000))
-    #save_for_debug(image_path, dst1, "07_cutting_word", dst1.shape)
-
-    dst2 = cv2.warpPerspective(thre, M, (1500, 1000))
-    #save_for_debug(image_path, dst2, "08_cutting_word_binary_inv", dst2.shape)
-
-    #contours = cv2.findContours(
-    #    dst2, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
-
-    #save_contour_for_debug(image_path, dst1, contours, "09_contours_inv", dst1.shape)
-    return dst2
-
-#img = editting_image("mnist_detection/test2.jpg")
+        mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+    #save_contour_for_debug(image_path, im_resized, contours,
+    #                       "04_contours", im_resized.shape)
+    return contours
+#img = editting_image("mnist_detection/image4.jpg")
 
 
 def detect_image(path_image):
-    image = editting_image(path_image)
-    contours = cv2.findContours(
-        image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+    contours = editting_image(path_image)
     #print(len(contours))
+    img = cv2.resize(cv2.imread(path_image), (2000, 1500),
+                     interpolation=cv2.INTER_AREA)
+    im_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    #save_for_debug(path_image, im_gray, "05_gray", im_gray.shape)
+
+    thre = cv2.threshold(im_gray, 127, 255, cv2.THRESH_BINARY_INV)[1]
+    #save_for_debug(path_image, thre, "06_thresh_binary_inv", thre.shape)
+
     listRect = []
     for i in contours:
         (x, y, w, h) = cv2.boundingRect(i)
-        if(w > 10 and h > 10 and w < 100 and h < 100):
+        if(w > 50 and h > 50 and w < 100 and h < 100):
             listRect.append([x, y, w, h])
-    #print(len(listRect))
+    print(len(listRect))
     listRect.sort(key=sortSecond)
     index = 0
-    list_image_detected = np.zeros(shape=(1,28,28)) 
+    list_image_detected = np.zeros(shape=(1, 28, 28))
+
     while index < len(listRect):
-        index += 20
+        index += 16
         list_iden = listRect[index:index+12]
         list_iden.sort(key=sortFirst)
         for i in range(len(list_iden)):
             (x, y, w, h) = list_iden[i]
-            piece_iden = image[y:y+h, x:x+w]
-            piece_iden = cv2.resize(piece_iden, (28, 28), interpolation=cv2.INTER_AREA)
-            piece_iden = np.array(piece_iden).reshape(1,28,28)
-            list_image_detected = np.append(list_image_detected,piece_iden,axis=0)
+            piece_iden = thre[y+7:y+h-7, x+7:x+w-7]
+            piece_iden = cv2.resize(
+                piece_iden, (28, 28), interpolation=cv2.INTER_AREA)
+            piece_iden = np.array(piece_iden).reshape(1, 28, 28)
+            list_image_detected = np.append(
+                list_image_detected, piece_iden, axis=0)
         index += 12
         list_date = listRect[index:index+8]
         list_date.sort(key=sortFirst)
         for i in range(len(list_date)):
             (x, y, w, h) = list_date[i]
-            piece_date = image[y:y+h, x:x+w]
-            piece_date = cv2.resize(piece_date, (28, 28), interpolation=cv2.INTER_AREA)
+            piece_date = thre[y+7:y+h-7, x+7:x+w-7]
+            piece_date = cv2.resize(
+                piece_date, (28, 28), interpolation=cv2.INTER_AREA)
             piece_date = np.array(piece_date).reshape(1, 28, 28)
-            list_image_detected = np.append(list_image_detected, piece_date, axis=0)
+            list_image_detected = np.append(
+                list_image_detected, piece_date, axis=0)
         index += 8
+
     list_image_detected = np.delete(list_image_detected, 0, 0)
-    list_image_detected = np.expand_dims(list_image_detected,axis=-1).astype(np.float32)/255.0
+    list_image_detected = np.expand_dims(
+        list_image_detected, axis=-1).astype(np.float32)/255.0
     return list_image_detected
 
 
-#image = detect_image("mnist_detection/test3.jpg")
+#image = detect_image("mnist_detection/image2.jpg")
 #print(image.shape)
 #for i in range(len(image)):
-#    for j in range(len(image[i])):
-#       cv2.imwrite("piece"+str(i)+"-"+str(j)+".jpg",image[i][j])
+#    cv2.imwrite("piece"+str(i)+"-"+".jpg",image[i])

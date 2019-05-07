@@ -20,8 +20,8 @@ def getvaliddatagen():
 
 def Prediction(image,model,validdatagen):
     results = model.predict_generator(
-        validdatagen.flow(image, batch_size=20, shuffle=False),
-        steps=6
+        validdatagen.flow(image, batch_size=len(image)//4, shuffle=False),
+        steps=4
     )
     y_pred = np.argmax(results, axis=-1)
     return y_pred
