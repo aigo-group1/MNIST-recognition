@@ -70,7 +70,7 @@ def detect_image(path_image):
         (x, y, w, h) = cv2.boundingRect(i)
         if(w > 50 and h > 50 and w < 100 and h < 100):
             listRect.append([x, y, w, h])
-    print(len(listRect))
+    #print(len(listRect))
     listRect.sort(key=sortSecond)
     index = 0
     list_image_detected = np.zeros(shape=(1, 28, 28))
@@ -81,7 +81,7 @@ def detect_image(path_image):
         list_iden.sort(key=sortFirst)
         for i in range(len(list_iden)):
             (x, y, w, h) = list_iden[i]
-            piece_iden = thre[y+7:y+h-7, x+7:x+w-7]
+            piece_iden = thre[y+8:y+h-8, x+8:x+w-8]
             piece_iden = cv2.resize(
                 piece_iden, (28, 28), interpolation=cv2.INTER_AREA)
             piece_iden = np.array(piece_iden).reshape(1, 28, 28)
@@ -92,7 +92,7 @@ def detect_image(path_image):
         list_date.sort(key=sortFirst)
         for i in range(len(list_date)):
             (x, y, w, h) = list_date[i]
-            piece_date = thre[y+7:y+h-7, x+7:x+w-7]
+            piece_date = thre[y+8:y+h-8, x+8:x+w-8]
             piece_date = cv2.resize(
                 piece_date, (28, 28), interpolation=cv2.INTER_AREA)
             piece_date = np.array(piece_date).reshape(1, 28, 28)
@@ -101,12 +101,10 @@ def detect_image(path_image):
         index += 8
 
     list_image_detected = np.delete(list_image_detected, 0, 0)
-    list_image_detected = np.expand_dims(
-        list_image_detected, axis=-1).astype(np.float32)/255.0
     return list_image_detected
 
 
-#image = detect_image("mnist_detection/image2.jpg")
+#image = detect_image("mnist_detection/image3.jpg")
 #print(image.shape)
 #for i in range(len(image)):
 #    cv2.imwrite("piece"+str(i)+"-"+".jpg",image[i])

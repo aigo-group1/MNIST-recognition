@@ -19,6 +19,7 @@ def getvaliddatagen():
     return validdatagen
 
 def Prediction(image,model,validdatagen):
+    image = np.expand_dims(image, axis=-1).astype(np.float32)/255.0
     results = model.predict_generator(
         validdatagen.flow(image, batch_size=len(image)//4, shuffle=False),
         steps=4

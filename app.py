@@ -13,7 +13,7 @@ def handle(image_name):
     model = readImage.loadmodel()
     dirPath = os.getcwd().replace('\\','/')
     imagePath = '/home/khai9xht/mnist_project/server/upload/'+image_name
-    print(imagePath)
+    #print(imagePath)
     predict_iden,predict_date = pre.predict(imagePath,model,validatagen)
     list_obj = []
     for i in range(len(predict_iden)):

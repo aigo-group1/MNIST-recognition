@@ -1,7 +1,0 @@
-opencv-python-contrib
-jupyter
-matplotlib
-pandas
-numpy
-pillow
-scipy
