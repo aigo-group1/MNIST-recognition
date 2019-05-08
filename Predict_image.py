@@ -3,6 +3,7 @@ from mnist_model import readImage
 import numpy 
 import pickle
 import cv2
+import os
 
 def predict(imagePath,model,validdatagen):
     listimage = detection.detect_image(imagePath)
@@ -17,13 +18,16 @@ def predict(imagePath,model,validdatagen):
         i+=8
     return listiden,listdate
 
-
-#with open('mnist_model/model.pkl', 'rb') as pickle_file:
-#    model = pickle.load(pickle_file)
-#with open('mnist_model/validdatagen.pkl', 'rb') as pickle_file:
-#    validdatagen = pickle.load(pickle_file)
-#listiden, listdate = predict('mnist_detection/image1.jpg', model, validdatagen)
-#for line in listiden:
-#    print(line)
-#for line in listdate:
-#    print(line)
+"""
+dir1 = os.path.join(os.getcwd(), 'mnist_model')
+with open(os.path.join(dir1, 'model.pkl'), 'rb') as pickle_file:
+    model = pickle.load(pickle_file)
+with open(os.path.join(dir1, 'validdatagen.pkl'), 'rb') as pickle_file:
+    validdatagen = pickle.load(pickle_file)
+dir2 = os.path.join(os.getcwd(), 'mnist_detection')
+listiden, listdate = predict(os.path.join(dir2, 'image2.jpg'), model, validdatagen)
+for line in listiden:
+    print(line)
+for line in listdate:
+    print(line)
+"""

@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import math
-
+import os
 
 def sortFirst(val):
     return val[0]
@@ -99,12 +99,14 @@ def detect_image(path_image):
             list_image_detected = np.append(
                 list_image_detected, piece_date, axis=0)
         index += 8
-
     list_image_detected = np.delete(list_image_detected, 0, 0)
     return list_image_detected
 
-
-#image = detect_image("mnist_detection/image3.jpg")
-#print(image.shape)
-#for i in range(len(image)):
-#    cv2.imwrite("piece"+str(i)+"-"+".jpg",image[i])
+"""
+dir = os.path.join(os.getcwd(), 'mnist_detection')
+image = detect_image(os.path.join(dir, 'image2.jpg'))
+print(image.shape)
+save_dir = os.path.join(os.getcwd(), 'image_cutted')
+for i in range(len(image)):
+    cv2.imwrite(os.path.join(save_dir, "piece"+str(i)+"-"+".jpg"), image[i])
+"""

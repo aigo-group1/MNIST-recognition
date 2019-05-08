@@ -1,20 +1,19 @@
-#import sys
-#imagePath = sys.argv[1].replace('\\','/')
-
 from keras.models import load_model
 import keras.backend as K
 import cv2
 import numpy as np
 import pickle
+import os
 
+save_dir = os.path.join(os.getcwd(), 'mnist_model')
 def loadmodel():
     K.clear_session()
-    with open('mnist_model/model.pkl', 'rb') as pickle_file:
+    with open(os.path.join(save_dir, 'model.pkl'), 'rb') as pickle_file:
         model = pickle.load(pickle_file)
     return model
 
 def getvaliddatagen():
-    with open('mnist_model/validdatagen.pkl', 'rb') as pickle_file:
+    with open(os.path.join(save_dir, 'validdatagen.pkl'), 'rb') as pickle_file:
         validdatagen = pickle.load(pickle_file)
     return validdatagen
 

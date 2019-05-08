@@ -11,8 +11,9 @@ app = Flask(__name__)
 @app.route('/predict/<image_name>')
 def handle(image_name):
     model = readImage.loadmodel()
-    dirPath = os.getcwd().replace('\\','/')
-    imagePath = '/home/khai9xht/mnist_project/server/upload/'+image_name
+    server_dir = os.path.join(os.getcwd(), 'server')
+    upload_dir = os.path.join(server_dir, 'upload')
+    imagePath = os.path.join(upload_dir, image_name)
     #print(imagePath)
     predict_iden,predict_date = pre.predict(imagePath,model,validatagen)
     list_obj = []
