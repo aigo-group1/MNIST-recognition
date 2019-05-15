@@ -84,6 +84,7 @@ def detect_image(path_image):
             piece_iden = thre[y+8:y+h-8, x+8:x+w-8]
             piece_iden = cv2.resize(
                 piece_iden, (28, 28), interpolation=cv2.INTER_AREA)
+            piece_iden = cv2.dilate(piece_iden,(3,3))    
             piece_iden = np.array(piece_iden).reshape(1, 28, 28)
             list_image_detected = np.append(
                 list_image_detected, piece_iden, axis=0)
@@ -95,6 +96,7 @@ def detect_image(path_image):
             piece_date = thre[y+8:y+h-8, x+8:x+w-8]
             piece_date = cv2.resize(
                 piece_date, (28, 28), interpolation=cv2.INTER_AREA)
+            piece_date = cv2.dilate(piece_date,(3,3))    
             piece_date = np.array(piece_date).reshape(1, 28, 28)
             list_image_detected = np.append(
                 list_image_detected, piece_date, axis=0)
@@ -108,5 +110,5 @@ image = detect_image(os.path.join(dir, 'image2.jpg'))
 print(image.shape)
 save_dir = os.path.join(os.getcwd(), 'image_cutted')
 for i in range(len(image)):
-    cv2.imwrite(os.path.join(save_dir, "piece"+str(i)+"-"+".jpg"), image[i])
+    cv2.imwrite(os.path.join(save_dir, "piece"+str(i)+".jpg"), image[i])
 """
